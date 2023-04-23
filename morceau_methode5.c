@@ -54,8 +54,8 @@ int maxi(int a,int b){
 }
 
 int argmax_harmonique(double * tab,int count){
-    int m=0;
-    for(int i=1;i<=maxi(count/9-1,2000);i++){
+    int m=1;
+    for(int i=1;i<=maxi(count/9-1,1500);i++){
         if(tab[i]+tab[2*i]+tab[3*i]+tab[4*i]+tab[5*i]+tab[6*i]+tab[7*i]+tab[8*i]+tab[9*i]>tab[m]+tab[2*m]+tab[3*m]+tab[4*m]+tab[5*m]+tab[6*m]+tab[7*m]+tab[8*m]+tab[9*m]){
             m=i;
         }
@@ -137,27 +137,42 @@ double * fft3(char * titre,int largeur_echantillons_audio,int numero_echantillon
 
 int main(){
     //(!) Paramètres à choisir
-    int largeur_echantillons_audio = 22050 ; 
+    int largeur_echantillons_audio = 44100 ; 
     // si trop grand les notes se superposent, si trop court l'incertitude spectrale devient trop grande
+    char * titre_test = "chopin.wav"; // fichier wav retenu
 
     //(!) Paramètres qu'on ne choisit pas
+    SNDFILE * fichier_test;
+    SF_INFO info_test;
+    int nb_echantillons_test ;
+    int freq_echantillonnage_test ;
+    int nb_chaines_test;
+    int duree_test;
+    fichier_test = sf_open(titre_test, SFM_READ, &info_test); 
     int freq_echantillonnage = 44100 ; 
-    int nb_echantillons_elementaires_audio = 1190700 ;
-    int nb_echantillons_audio = nb_echantillons_elementaires_audio / largeur_echantillons_audio ;
+    int nb_echantillons_elementaires_audio = info_test.frames  ;
+    int nb_echantillons_audio = 4*nb_echantillons_elementaires_audio / largeur_echantillons_audio ;
     double largeur_temporelle_audio = largeur_echantillons_audio * freq_echantillonnage ; 
+    sf_close(fichier_test);
 
     // ci-dessus durée d'une échantillon temporel (celle-ci doit être suffisamment courte sinon les notes se superposent)
+    printf("nb_echantillons_audio : %d\n",nb_echantillons_audio);
     for(int numero_echantillon_audio=1;numero_echantillon_audio<nb_echantillons_audio;numero_echantillon_audio++){
-        double * transformee = fft3("gamme.wav",largeur_echantillons_audio,numero_echantillon_audio);
+        double * transformee = fft3(titre_test,largeur_echantillons_audio,numero_echantillon_audio);
         int freq_max_test = argmax_harmonique(transformee,largeur_echantillons_audio);
         //printf("fréquence maximale : %f\n",(double)freq_max_test * (double) 44100 / (double)largeur_echantillons_audio);
         int octave[4];
         for(int i=0;i<=3;i++){
-            octave[i]=transformee[freq_max_test*puissance(2,i)];
+            if(freq_max_test*puissance(2,i)>largeur_echantillons_audio-1){
+                octave[i]=0;
+            }
+            else{            
+                octave[i]=transformee[freq_max_test*puissance(2,i)];
+            }
         } 
         int freq_max_test_finale = freq_max_test*puissance(2,argmax(octave,4));
         //printf("Fréquence maxime sélectionnée : %f\n",freq_max_test_finale* (double) 44100 / (double)largeur_echantillons_audio);
-        printf("Note retenue (n° de touche du piano) : %d\n",note(freq_max_test_finale));
+        printf("Echantillon n°%d / %d--> Note retenue (n° de touche du piano) : %d\n",numero_echantillon_audio,nb_echantillons_audio,note(freq_max_test_finale));
         free(transformee);
     }
     return 0;
