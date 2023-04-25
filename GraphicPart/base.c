@@ -10,10 +10,14 @@ Rappels de complation :
 
 int main(int argc, char** argv)
 {
+    /*
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         SDL_Log("ERREUR : Initialisation SDL > %s\n", SDL_GetError());
     }
+    */
+
+    SDL_Init(SDL_INIT_EVERYTHING);
 
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -36,14 +40,20 @@ int main(int argc, char** argv)
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-
-    for (int i = 0; i < 52; ++i)
-    {
-        SDL_Rect rectangle = {i*30; 100; 30; 600};
-        SDL_RenderFillRect(renderer, rectangle);
-    }
+    SDL_Rect rectangle = {0, 100, 1600, 600};
+    SDL_RenderFillRect(renderer, &rectangle);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+
+    SDL_RenderDrawLine(renderer, 0, 100, 1600, 100);
+    SDL_RenderDrawLine(renderer, 0, 700, 1600, 700);
+
+    for (int i = 0; i < 53; ++i)
+    {
+        SDL_RenderDrawLine(renderer, i*30, 100, i*30, 700);
+    }
+
+    
 
     /*
     b = -30;
@@ -55,6 +65,7 @@ int main(int argc, char** argv)
 
         if (i%2 == 0)
         {
+            
             SDL_RenderFillRect(renderer, rectangle)
         }
     }
