@@ -8,6 +8,8 @@ Plan : I/ Présentation du projet II/ Les trois méthodes de détection de notes
 
 I. Présentation du projet
 
+J'ai testé trois méthodes différentes. 
+
 II.	Les trois méthodes de détection de notes étudiées
 
 a)	Minimisation de l’écart quadratique 
@@ -33,5 +35,9 @@ neur2.c et neur3.c ne sont pas sur github car non performants.
 III/ Utilisation actuelle des scripts
 
 En bas de chaque script se trouve une ligne de compilation (commençant par gcc ...) à mettre dans le shell. Celle-ci compile le programme choisi. Ensuite, il n'y a plus qu'à exécuter en faisant ./a.out 
+
+Maxime Corlay
+
+NB : Romain Fages est en charge de l'interface graphique en cours de développement.
 
 
