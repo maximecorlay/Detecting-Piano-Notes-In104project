@@ -4,5 +4,5 @@
 
 all: morceau_methode5.c
 
-morceau_methode5: a.out
+a.out : morceau_methode5.c
     gcc morceau_methode5.c -lm -lgsl
