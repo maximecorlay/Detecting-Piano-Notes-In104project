@@ -49,13 +49,15 @@ SDL_Rect noir86 = {(11/12)*LARG+49*LARG, 100, LARG, 600};
 
 int main(int argc, char** argv)
 {
-    /*
+
+    // Lancement de la librairie SDL
+    
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         SDL_Log("ERREUR : Initialisation SDL > %s\n", SDL_GetError());
     }
-    */
 
+    // Création du piano
     
     SDL_Rect* piano = malloc(89*sizeof(SDL_Rect));
 
@@ -245,6 +247,9 @@ int main(int argc, char** argv)
 
 
     /*
+
+    Récapitulatif sur les données du piano
+    
     piano[1] = {0, 100, LARG, 600};
     piano[2] = {(1/2)*LARG, 100, LARG, 400};
     piano[3] = {LARG, 100, LARG, 600};
@@ -336,7 +341,7 @@ int main(int argc, char** argv)
 */
     
 
-    SDL_Init(SDL_INIT_EVERYTHING);
+    // Création de la fenêtre et du rendu (on vérifie si chaque initialisation a bien fonctionné)
 
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -357,6 +362,8 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
+    // Création du clavier
+
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
     SDL_Rect rectangle = {0, 100, 1600, 600};
@@ -371,6 +378,9 @@ int main(int argc, char** argv)
     {
         SDL_RenderDrawLine(renderer, i*30, 100, i*30, 700);
     }
+
+     
+    // Coloriage des touches noires 
 
     SDL_RenderFillRect(renderer, &piano[2]);
     SDL_RenderFillRect(renderer, &piano[5]);
@@ -415,11 +425,11 @@ int main(int argc, char** argv)
 
     SDL_Delay(10000);
 
+    // Destruction de la fenêtre et libération de la mémoire
+
     free(piano);
 
     SDL_DestroyWindow(window);
-
-
 
     SDL_Quit();
 
