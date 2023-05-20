@@ -36,12 +36,15 @@ SDL_Color blackKeyColors[] = {
 
 
 int main(int argc, char *argv[]) {
-    int notes[88];
-    int y[88];
+    int* notes = malloc(1024*sizeof(int));
+    int* y = malloc(1024*sizeof(int));
 
-    for (int i = 0; i < 88; ++i)
+    //Initialisation des tableaux
+
+    partition(notes);
+
+    for (int i = 0; i < 1024; ++i)
     {
-        notes[i] = i;
         y[i] = -(i+1)*TOUCHE_HAUTEUR;
     }
 
@@ -191,6 +194,9 @@ int main(int argc, char *argv[]) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    free(notes);
+    free(y);
 
     return 0;
 }

@@ -42,7 +42,7 @@ int note(int frequence){
 
 // main
 
-int* partition() {
+void partition(int* notes) {
     //(!) PARAMETRES A PRECISER A LA MACHINE
     int tau1 = 1024 ; 
     int tau2 = 4096 ;  
@@ -70,7 +70,6 @@ int* partition() {
     gsl_fft_complex_workspace * workspace = gsl_fft_complex_workspace_alloc(tau2);
     int nb_iterations = (duree_audio*freq_echantillonnage-tau2)/tau1;
 
-    int* harmo = malloc(tau1*sizeof(int));
 
     for(int cpt2 = 0;cpt2< tau1;cpt2++) {
     
@@ -95,7 +94,7 @@ int* partition() {
         freq_maximale = argmax_double(transfo_fourier,tau2);
         note_jouee = note(freq_maximale*freq_echantillonnage/tau2);
         
-        harmo[cpt2] = note_jouee;
+        notes[cpt2] = note_jouee;
     }
 
     free(enregistrement_audio_ushort);
@@ -105,7 +104,6 @@ int* partition() {
     gsl_fft_complex_wavetable_free(wavetable);
     gsl_fft_complex_workspace_free(workspace);
 
-    return partition;
 }
 
 // gcc morceau_methode5.c -lm -lgsl 
