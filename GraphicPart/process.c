@@ -72,16 +72,20 @@ void partition(int* notes) {
 
 
     for(int cpt2 = 0;cpt2< tau1;cpt2++) {
-    
-        for (int cpt3 = 0; cpt3 < tau2 ; cpt3++) {
+
+        for (int cpt3 = 0; cpt3 < tau2-100 ; cpt3++) {
             REAL(echantillon_complexe_lu,cpt3) = enregistrement_audio_double[tau1*cpt2+cpt3];
             IMAG(echantillon_complexe_lu,cpt3) = 0.0;
         }
+        for (int cpt3 = tau2-100; cpt3 < tau2 ; cpt3++) {
+            REAL(echantillon_complexe_lu,cpt3) = 0.0;
+            IMAG(echantillon_complexe_lu,cpt3) = 0.0;
+        }
 
-        /*// Appliquer la fenêtre de Hamming
+        // Appliquer la fenêtre de Hamming
         for (int j = 0; j < tau2 ; j++) {
             echantillon_complexe_lu[2*j] *= 0.54 - 0.46 * cos(2.0 * 3.14159265 * (double)j / (double)(tau2 - 1));
-        }*/
+        }
 
         gsl_fft_complex_forward(echantillon_complexe_lu, 1, tau2, wavetable, workspace);
         for (int cpt4 = 0; cpt4 < tau2 ; cpt4++) {
@@ -105,5 +109,3 @@ void partition(int* notes) {
     gsl_fft_complex_workspace_free(workspace);
 
 }
-
-// gcc morceau_methode5.c -lm -lgsl 
