@@ -1,51 +1,35 @@
 #include <SDL2/SDL.h>
 #include "process.h"
 
-// Dimensions de la fenêtre
-
+// dimensions de la fenêtre
 #define FENETRE_LARGEUR 1000
 #define FENETRE_HAUTEUR 800
 
-// Dimensions d'une touche de piano
+// dimensions des touches
 #define TOUCHE_LARGEUR (FENETRE_LARGEUR / 88)
 #define TOUCHE_HAUTEUR 100
 
-// Tableau des couleurs des touches blanches
-
-SDL_Color whiteKeyColors[] = {
-    {255, 255, 255, 255}, // Do
-    {255, 255, 255, 255}, // Ré
-    {255, 255, 255, 255}, // Mi
-    {255, 255, 255, 255}, // Fa
-    {255, 255, 255, 255}, // Sol
-    {255, 255, 255, 255}, // La
-    {255, 255, 255, 255}, // Si
+// couleur des touches blanches
+SDL_Color couleur_touches_blanches[] = {
+    {255, 255, 255, 255}
 };
 
 
-// Tableau des couleurs des touches noires
-
-SDL_Color blackKeyColors[] = {
-    {0, 0, 0, 255},       // Do#
-    {0, 0, 0, 255},       // Ré#
-    {0, 0, 0, 255},       // Fa#
-    {0, 0, 0, 255},       // Sol#
-    {0, 0, 0, 255}        // La#
+// couleur des touches noires
+SDL_Color couleur_touches_noires[] = {
+    {0, 0, 0, 255}  
 };
 
 
 
 int main(int argc, char *argv[]) {
     int* notes = malloc(1024*sizeof(int));
-    int* y = malloc(1024*sizeof(int));
-
-    //Initialisation des tableaux
-
+    int* pos = malloc(1024*sizeof(int));
     partition(notes);
 
     for (int i = 0; i < 1024; ++i)
     {
-        y[i] = -(i+1)*TOUCHE_HAUTEUR;
+        pos[i] = -(i+1)*TOUCHE_HAUTEUR;
     }
 
     SDL_Window *window = NULL;
@@ -54,7 +38,6 @@ int main(int argc, char *argv[]) {
 
 
     // Initialisation de SDL
-
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Erreur lors de l'initialisation de SDL : %s\n", SDL_GetError());
         return -1;
@@ -62,7 +45,6 @@ int main(int argc, char *argv[]) {
 
 
     // Création de la fenêtre
-
     window = SDL_CreateWindow("Clavier de piano", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, FENETRE_LARGEUR, FENETRE_HAUTEUR, SDL_WINDOW_SHOWN);
 
     if (window == NULL) {
@@ -73,7 +55,6 @@ int main(int argc, char *argv[]) {
 
 
     // Création du renderer
-
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (renderer == NULL) {
@@ -93,18 +74,18 @@ int main(int argc, char *argv[]) {
     /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    int running2 = 1;
+    int running = 1;
 
-    while (running2) {
+    while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
-                running2 = 0;
+                running = 0;
             }
 
             else if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_ESCAPE:
-                        running2 = 0;
+                        running = 0;
                         break;
                     default:
                         break;
@@ -121,8 +102,8 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < 88; i++) {
           // Détermine la position et la couleur de la touche
             int x = i * TOUCHE_LARGEUR;
-            SDL_Color color;
-            int isBlackKey = 0;  // Variable pour déterminer si la touche est noire
+            SDL_Color couleur;
+            int est_touche_noire = 0;  // Variable pour déterminer si la touche est noire
 
 
             // Vérifie si la touche est noire
@@ -132,7 +113,7 @@ int main(int argc, char *argv[]) {
                 case 6: // Fa#
                 case 8: // Sol#
                 case 10: // La#
-                    isBlackKey = 1;
+                    est_touche_noire = 1;
                     break;
                 default:
                     break;
@@ -141,23 +122,23 @@ int main(int argc, char *argv[]) {
 
             // Définit la couleur de la touche
 
-            if (isBlackKey) {
-                color = blackKeyColors[i % 5];
+            if (est_touche_noire) {
+                couleur = couleur_touches_noires[0] ;
             } else {
-                color = whiteKeyColors[i % 7];
+                couleur = couleur_touches_blanches[0] ;
             }
 
 
             // Dessine la touche
 
             SDL_Rect rect2 = {x, 700, TOUCHE_LARGEUR, TOUCHE_HAUTEUR};
-            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+            SDL_SetRenderDrawColor(renderer, couleur.r, couleur.g, couleur.b, couleur.a);
             SDL_RenderFillRect(renderer, &rect2);
         }
 
         for (int i = 1; i < 87; i++) {
 
-            //Traçage des lignes de séparation entre les toucheS
+            //Traçage des lignes de séparation entre les touches
             int x = i * TOUCHE_LARGEUR;
             SDL_Rect rect_ligne = {x-0.5,700,1,TOUCHE_HAUTEUR};
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -168,10 +149,10 @@ int main(int argc, char *argv[]) {
         SDL_SetRenderDrawColor(renderer,200,200,200,0);
         SDL_RenderFillRect(renderer,&rect2);
 
-        for(int k=0;k<88;k++){
-            y[k]+=1;
-            // Dessine le rectangle
-            SDL_Rect rect = { notes[k]*TOUCHE_LARGEUR, y[k], TOUCHE_LARGEUR, TOUCHE_HAUTEUR };
+        for(int k=0;k<1024;k++){
+            pos[k]+=16;
+            // Dessine le rectangle rouge qui descend
+            SDL_Rect rect = { notes[k]*TOUCHE_LARGEUR, pos[k], TOUCHE_LARGEUR, TOUCHE_HAUTEUR };
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
             SDL_RenderFillRect(renderer, &rect);
         }
@@ -179,8 +160,8 @@ int main(int argc, char *argv[]) {
 
         // Vérifie si le rectangle est entièrement sorti de la fenêtre
 
-        if (y[87] > FENETRE_HAUTEUR) {
-            running2 = 0;
+        if (pos[1023] > FENETRE_HAUTEUR) {
+            running = 0;
         }
 
 
@@ -196,7 +177,7 @@ int main(int argc, char *argv[]) {
     SDL_Quit();
 
     free(notes);
-    free(y);
+    free(pos);
 
     return 0;
 }
