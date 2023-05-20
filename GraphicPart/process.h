@@ -17,4 +17,4 @@ int note(int frequence);
 
 
 // main
-int* partition();
+void partition(int* notes);
