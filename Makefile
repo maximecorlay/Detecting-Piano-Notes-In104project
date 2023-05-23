@@ -1,5 +1,4 @@
-# Ce makefile est encore incomplet en raison de la partie graphique qui n'est pas fonctionnelle (problèmes SDL)
+# Le MAKEFILE fonctionnel et global du projet se trouve dans la partie GraphicPart
 
-# Merci de regarder le Makefile de ProcessPart
-
+# Ce MAKEFILE (voir partie GraphicPart) relie bien les parties process et graphique du projet, et est fonctionnel
 
