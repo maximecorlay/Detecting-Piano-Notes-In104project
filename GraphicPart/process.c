@@ -48,6 +48,7 @@ void partition(int* notes) {
     int tau2 = 4096 ;  
     int duree_audio = 27 ; 
     int freq_echantillonnage = 44100 ;
+    int nb_echantillons = 1157 ; // = duree_audio*freq_echantillonnage/tau1 - 5
     FILE * fichier_audio = fopen("gamme.wav", "rb");
     // Nb : ce code fonctionne seulement avec .wav canal mono , 16 bits / échantillon
     // Vérifier ces informations sur VLC avant toute utilisation
@@ -59,7 +60,7 @@ void partition(int* notes) {
     ushort * enregistrement_audio_ushort = malloc(duree_audio*freq_echantillonnage*sizeof(ushort));
     double * enregistrement_audio_double = malloc(duree_audio*freq_echantillonnage*sizeof(double));
     fread(enregistrement_audio_ushort, sizeof(ushort), duree_audio*freq_echantillonnage, fichier_audio);
-    for(int cpt1 = 0 ; cpt1<duree_audio*freq_echantillonnage ; cpt1++){
+    for(int cpt1 = 0 ; cpt1< duree_audio*freq_echantillonnage ; cpt1++){
         enregistrement_audio_double [cpt1] = (double) enregistrement_audio_ushort [cpt1];
     }
     fclose(fichier_audio);
@@ -71,7 +72,7 @@ void partition(int* notes) {
     int nb_iterations = (duree_audio*freq_echantillonnage-tau2)/tau1;
 
 
-    for(int cpt2 = 0;cpt2< tau1;cpt2++) {
+    for(int cpt2 = 0;cpt2< nb_echantillons ;cpt2++) {
 
         for (int cpt3 = 0; cpt3 < tau2-100 ; cpt3++) {
             REAL(echantillon_complexe_lu,cpt3) = enregistrement_audio_double[tau1*cpt2+cpt3];
