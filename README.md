@@ -34,10 +34,11 @@ neur2.c et neur3.c ne sont pas sur github car non performants.
 
 III/ Utilisation actuelle des scripts
 
-En bas de chaque script se trouve une ligne de compilation (commençant par gcc ...) à mettre dans le shell. Celle-ci compile le programme choisi. Ensuite, il n'y a plus qu'à exécuter en faisant ./a.out 
+Pour accéder au rendu final du projet (et l'exécuter), merci de se rendre dans GraphicPart et faire "make". Ensuite, faire "./sdl.x" afin d'exécuter le fichier. Vous verrez apparaître à l'écran un piano avec les notes qui descendent. Ces notes sont réellement issues de la partie process.
 
-Maxime Corlay
+IV/ Répartition du travail :
 
-NB : Romain Fages est en charge de l'interface graphique en cours de développement.
+Maxime Corlay : ProcessPart, GraphicPart (relier les 2 parties), Utiliser GSL et SDL
+Romain Fages : GraphicPart, relier ProcessPart et GraphicPart, Utiliser SDL
 
 
