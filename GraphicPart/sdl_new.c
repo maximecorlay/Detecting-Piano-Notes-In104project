@@ -23,11 +23,12 @@ SDL_Color couleur_touches_noires[] = {
 
 
 int main(int argc, char *argv[]) {
-    int* notes = malloc(1024*sizeof(int));
-    int* pos = malloc(1024*sizeof(int));
+    int nb_echantillons = 1157; // = duree_audio*freq_echantillonnage/tau1 - 5
+    int* notes = malloc(nb_echantillons*sizeof(int));
+    int* pos = malloc(nb_echantillons*sizeof(int));
     partition(notes);
 
-    for (int i = 0; i < 1024; ++i)
+    for (int i = 0; i < nb_echantillons ; ++i)
     {
         pos[i] = -(i+1)*TOUCHE_HAUTEUR;
     }
@@ -149,18 +150,20 @@ int main(int argc, char *argv[]) {
         SDL_SetRenderDrawColor(renderer,200,200,200,0);
         SDL_RenderFillRect(renderer,&rect2);
 
-        for(int k=0;k<1024;k++){
-            pos[k]+=16;
+        for(int k=0;k<nb_echantillons;k++){
+            pos[k]+=18;
             // Dessine le rectangle rouge qui descend
+            if(notes[k]>10&&notes[k]<85){
             SDL_Rect rect = { notes[k]*TOUCHE_LARGEUR, pos[k], TOUCHE_LARGEUR, TOUCHE_HAUTEUR };
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
             SDL_RenderFillRect(renderer, &rect);
+            }
         }
 
 
         // Vérifie si le rectangle est entièrement sorti de la fenêtre
 
-        if (pos[1023] > FENETRE_HAUTEUR) {
+        if (pos[nb_echantillons-1] > FENETRE_HAUTEUR) {
             running = 0;
         }
 
